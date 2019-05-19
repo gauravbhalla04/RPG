@@ -11,13 +11,10 @@ h = 500
 window.wm_title("RPG")  #give the window a title
 window.geometry('%dx%d+%d+%d' % (wid, h, x, y))  #specify the window location and size
 
-
-
-
 difficulty = 1  #preset variables to be used later
 pause = 1
 level = 1
-
+    
 def reset():   #this is the opening statement to begin the function definition
     '''Reset the stuff in our window'''
     for child in window.winfo_children():   #for every thing in the window, run this set of code
@@ -34,21 +31,49 @@ class Player():   #the player
         self.health = 50
         
         def sword():    #these functions decide the amount of damage the player does to their opponent, for each turn the player takes the enemy takes another
-            enemy.health -= self.multiplier * 8
-            self.health -= enemy.multiplier*1.2
+            global level
+            enemy.health -= self.multiplier * 40
+            self.health -= enemy.multiplier*40
             tk.Label(window, text=str(self.health) +"HP Left").place(relx=0.8, rely=0.1)
+            if self.health == 0 or self.health < 0:
+                window.destroy()
+                pass
+            elif enemy.health == 0 or enemy.health < 0:
+                level += 1
+                Game()
         def wws():
+            global level
             enemy.health -= enemy.health/25
-            self.health -= enemy.multiplier*1.2
+            self.health -= enemy.multiplier*35
             tk.Label(window, text=str(self.health) +"HP Left").place(relx=0.8, rely=0.1)
+            if self.health == 0 or self.health < 0:
+                window.destroy()
+                pass
+            elif enemy.health == 0 or enemy.health < 0:
+                level += 1
+                Game()
         def spear():
-            enemy.health -= randint(0, 12)
-            self.health -= enemy.multiplier*1.2
+            global level
+            enemy.health -= randint(6, 12)
+            self.health -= enemy.multiplier*35
             tk.Label(window, text=str(self.health) +"HP Left").place(relx=0.8, rely=0.1)
+            if self.health == 0 or self.health < 0:
+                window.destroy()
+                pass
+            elif enemy.health == 0 or enemy.health < 0:
+                level += 1
+                Game()
         def heal():
+            global level
             self.health += 5
-            self.health -= enemy.multiplier*1.2
+            self.health -= enemy.multiplier*50
             tk.Label(window, text=str(self.health) +"HP Left").place(relx=0.8, rely=0.1)
+            if self.health == 0 or self.health < 0:
+                window.destroy()
+                pass
+            elif enemy.health == 0 or enemy.health < 0:
+                level += 1
+                Game()
         self.attacks = {"Sword": sword(),
                         "Whack with shield":wws(),
                         "Spear": spear(),
@@ -67,9 +92,6 @@ class rpg():
     def __init__(self, player, enemy):
         self.narrative = [ "o===[]:::::::::::::>\n",  "It is a dark time for students",  "You wander nervously through the hallowed halls of",
                     "Altrincham Grammar School for Boys",  "Dark creatures stalk the corridors"]
-
-def end():
-    window.quit()
     
 enemy = Enemy()
 player = Player(enemy)
@@ -81,16 +103,6 @@ def fight(player, enemy):
     for attack in player.attacks:
         tk.Button(window, text=attack, command = player.attacks[attack]).place(x=20, y=20*i)
         i += 2
-    while True:
-        if player.health == 0 or player.health < 0:
-            end()
-            break
-        elif enemy.health == 0 or enemy.health < 0:
-            level += 1
-            Game()
-            break
-        else:
-            continue
 
 def run(player, enemy):
     pass
